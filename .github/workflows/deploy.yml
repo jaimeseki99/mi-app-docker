@@ -12,6 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+    - name: Saludar
+      run: echo "Hola holita"
+    
     - name: Checkout del código
       uses: actions/checkout@v3
 
