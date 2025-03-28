@@ -12,7 +12,7 @@ jobs:
     steps:
 
     - name: Saludar
-    - run: echo "Hola holita"
+      run: echo "Hola holita"
     
     - name: Checkout del código
       uses: actions/checkout@v3
