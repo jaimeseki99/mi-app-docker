@@ -27,4 +27,4 @@ jobs:
       run: terraform init
 
     - name: Inicializar Terraform
-      run: terraform destroy
+      run: terraform destroy -auto-approve
