@@ -8,6 +8,10 @@ jobs:
     name: "Destroy AWS"
     runs-on: ubuntu-latest
     steps:
+
+      - name: Checkout del código
+        uses: actions/checkout@v3
+
       - name: AWS Plan Copy
         run: aws s3 cp s3://bucket-git-jaime/gitactions/terraform.tfstate terraform.tfstate
         id: copy
@@ -19,6 +23,9 @@ jobs:
 
       - name: Instalar Terraform
         uses: hashicorp/setup-terraform@v2
+      
+      - name: Inicializar Terraform
+        run: terraform init
       
       - name: Show Destroy plan
         run: terraform plan -destroy
