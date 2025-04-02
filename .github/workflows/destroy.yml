@@ -17,8 +17,8 @@ jobs:
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
           AWS_DEFAULT_REGION: ${{ secrets.REGION }}
 
-       - name: Instalar Terraform
-         uses: hashicorp/setup-terraform@v2
+      - name: Instalar Terraform
+        uses: hashicorp/setup-terraform@v2
       
       - name: Show Destroy plan
         run: terraform plan -destroy
