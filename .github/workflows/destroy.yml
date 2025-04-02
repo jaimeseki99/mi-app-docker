@@ -1,30 +1,35 @@
-name: Destroy Terraform to AWS
+name: Manually triggered workflow
 
 on: 
   workflow_dispatch:
   
 jobs:
-  deploy:
+  destroy:
+    name: "Destroy AWS"
     runs-on: ubuntu-latest
-
-    steps:      
-    - name: Checkout del código
-      uses: actions/checkout@v3
-
-    - name: Configurar AWS CLI
-    
-      uses: aws-actions/configure-aws-credentials@v3
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN}}
-        aws-region: us-east-1
-
-    - name: Instalar Terraform
-      uses: hashicorp/setup-terraform@v2
-
-    - name: Inicializar Terraform
-      run: terraform init
-
-    - name: Inicializar Terraform
-      run: terraform destroy -auto-approve
+    steps:
+      - name: AWS Plan Copy
+        run: aws s3 cp s3://bucket-git-jaime/gitactions/terraform.tfstate terraform.tfstate
+        id: copy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+          AWS_DEFAULT_REGION: ${{ secrets.REGION }}
+      
+      - name: Show Destroy plan
+        run: terraform plan -destroy
+        continue-on-error: true
+      
+      - name: Destroy resources jobs
+        run: terraform destroy -auto-approve
+        continue-on-error: true
+      
+      - name: Delete plan file
+        if: steps.destroy.outcome == 'success'
+        run: aws s3 rm s3://bucket-git-jaime/gitactions/terraform.tfstate
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+          AWS_DEFAULT_REGION: ${{ secrets.REGION }}

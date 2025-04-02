@@ -1,20 +1,13 @@
-name: Deploy Terraform to AWS
+name: Manually triggered deploy workflow
 
 on:
   workflow_dispatch: 
 
-  push:
-    branches:
-      - main  # Ejecutar solo cuando haya cambios en la rama principal
-
 jobs:
   deploy:
+    name: "Deploy AWS"
     runs-on: ubuntu-latest
-
     steps:
-
-    - name: Saludar
-      run: echo "Hola holita"
     
     - name: Checkout del código
       uses: actions/checkout@v3
@@ -27,6 +20,16 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-session-token: ${{ secrets.AWS_SESSION_TOKEN}}
         aws-region: us-east-1
+    
+    - name: Copiar plan de AWS
+      id: copyfrom
+      run: aws s3 cp terraform.tfstate s3://bucket-git-jaime/gitactions/terraform.tfstate 
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+        AWS_DEFAULT_REGION: ${{ secrets.REGION }}
+      continue-on-error: true
 
     - name: Instalar Terraform
       uses: hashicorp/setup-terraform@v2

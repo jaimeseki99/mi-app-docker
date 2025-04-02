@@ -64,7 +64,6 @@ resource "aws_instance" "app_server" {
 
 resource "aws_s3_bucket" "git_bucket" {
   bucket = "bucket-git-jaime"
-  acl    = "private"
 }
 
 output "public_ip" {
