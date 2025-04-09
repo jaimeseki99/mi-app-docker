@@ -27,7 +27,6 @@ jobs:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_session_token: ${{ secrets.AWS_SESSION_TOKEN }}
-          aws_region: ${{ secrets.REGION }}
   
       - name: Aplicar Terraform
         run: terraform apply -auto-approve
