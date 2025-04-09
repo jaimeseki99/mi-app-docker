@@ -20,6 +20,7 @@ runs:
         aws-access-key-id: ${{ inputs.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
         aws-session-token: ${{ inputs.AWS_SESSION_TOKEN}}
+        aws-region: us-east-1
     - name: Instalar Terraform
       uses: hashicorp/setup-terraform@v2
     - name: Inicializar Terraform
